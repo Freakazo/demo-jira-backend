@@ -1,7 +1,15 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { Field, InputType } from '@nestjs/graphql';
+import { IsString, MinLength } from 'class-validator';
 
 @InputType()
 export class CreateTaskInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field()
+  @MinLength(3)
+  @IsString()
+  title: string;
+
+  @Field()
+  @MinLength(2)
+  @IsString()
+  description: string;
 }

@@ -1,8 +1,8 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { TasksService } from './tasks.service';
-import { Task } from './entities/task.entity';
 import { CreateTaskInput } from './dto/create-task.input';
 import { UpdateTaskInput } from './dto/update-task.input';
+import { Task } from './gqlEntities/task.gqlEntity';
 
 @Resolver(() => Task)
 export class TasksResolver {
@@ -24,8 +24,11 @@ export class TasksResolver {
   }
 
   @Mutation(() => Task)
-  updateTask(@Args('updateTaskInput') updateTaskInput: UpdateTaskInput) {
-    return this.tasksService.update(updateTaskInput.id, updateTaskInput);
+  updateTask(
+    @Args('id') id: number,
+    @Args('updateTaskInput') updateTaskInput: UpdateTaskInput,
+  ) {
+    return this.tasksService.update(id, updateTaskInput);
   }
 
   @Mutation(() => Task)
