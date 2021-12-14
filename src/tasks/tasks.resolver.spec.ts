@@ -3,6 +3,8 @@ import { TasksResolver } from './tasks.resolver';
 import { TasksService } from './tasks.service';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Task } from '../entities/Task.entity';
+import { UsersModule } from '../users/users.module';
+import { TaskLog } from '../entities/TaskLog.entity';
 
 describe('TasksResolver', () => {
   let resolver: TasksResolver;
@@ -11,9 +13,10 @@ describe('TasksResolver', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        UsersModule,
         MikroOrmModule.forRoot(),
         MikroOrmModule.forFeature({
-          entities: [Task],
+          entities: [Task, TaskLog],
         }),
       ],
       providers: [TasksResolver, TasksService],
@@ -56,5 +59,16 @@ describe('TasksResolver', () => {
     jest.spyOn(service, 'update').mockImplementation();
     resolver.updateTask(2, { title: 'new title' });
     expect(service.update).toBeCalledWith(2, { title: 'new title' });
+  });
+
+  it('assigns a user to a task', async () => {
+    jest.spyOn(service, 'assignUserToTask').mockImplementation();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    jest.spyOn(service, 'findOne').mockImplementation(() => '_TEST_');
+    const res = await resolver.assignUserToTask(1, 2);
+    expect(res).toEqual('_TEST_');
+    expect(service.assignUserToTask).toBeCalledWith(1, 2);
+    expect(service.findOne).toBeCalledWith(1);
   });
 });

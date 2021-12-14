@@ -1,7 +1,8 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { UserGqlType } from '../../users/entities/user.gqlEntity';
 
-@ObjectType()
-export class Task {
+@ObjectType('Task')
+export class TaskGqlType {
   @Field(() => Int)
   id: number;
 
@@ -10,4 +11,7 @@ export class Task {
 
   @Field()
   description: string;
+
+  @Field(() => [UserGqlType])
+  assignees: UserGqlType[];
 }

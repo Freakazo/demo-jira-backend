@@ -1,15 +1,23 @@
 import { Module } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { TasksResolver } from './tasks.resolver';
+import {
+  TaskLogResolver,
+  TasksResolver,
+  UserTaskResolver,
+} from './tasks.resolver';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Task } from '../entities/Task.entity';
+import { UsersModule } from '../users/users.module';
+import { TaskLog } from '../entities/TaskLog.entity';
 
 @Module({
   imports: [
     MikroOrmModule.forFeature({
-      entities: [Task],
+      entities: [Task, TaskLog],
     }),
+    UsersModule,
   ],
-  providers: [TasksResolver, TasksService],
+  providers: [TasksResolver, TaskLogResolver, UserTaskResolver, TasksService],
+  exports: [TasksService],
 })
 export class TasksModule {}
