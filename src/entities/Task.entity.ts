@@ -16,7 +16,7 @@ export class Task extends BaseEntity {
   @Index()
   title: string;
 
-  @Property()
+  @Property({ length: 5000 })
   description: string;
 
   // TODO: Add task status
